@@ -7,5 +7,6 @@ body{
 }
 
 h1, h2, h3 {
-    font-family:Cambria;
+    font-family:Roboto, Helvetica;
+    font-size:1.2rem;
 }
