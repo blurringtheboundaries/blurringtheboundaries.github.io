@@ -554,7 +554,7 @@
           case 'btb8':
               console.log('btb board');
               // lazy demo
-              for(let i = 8; i<12;i++){
+              for(let i = 0; i<8;i++){
                   document.querySelectorAll('.svg-thumb')[i].style.display='none';
                   document.querySelectorAll('.svg-text')[i].style.display='none';
                   document.querySelectorAll('.svg-fader__track')[i].style.display='none';
@@ -569,7 +569,8 @@
                       })
                       processFader(i, value)
                   })
-                  midiMapper.assign(0, 'cc', i-8, (value)=>{
+                  
+                  midiMapper.assign(0, 'cc', i, (value)=>{
                       Tone.start();
                       setFaderElements({
                           svgElement: document.querySelector(`#thumb_${i-8}`),
