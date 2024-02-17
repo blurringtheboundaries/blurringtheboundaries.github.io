@@ -1,0 +1,632 @@
+
+<head>
+  <title>Sensor test page</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, width=device-width"/>
+  <link rel="stylesheet" href="./fader/style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+  <script src="./fader/main.js"></script>
+  <script>
+    const generateFaders = function(sliderCount = 12, container = document.querySelector('#slider-container'), rectQuery = '#slider-bg rect.svg-fader'){
+        let rectArray = Array.from(document.querySelectorAll(rectQuery));
+        rectArray = rectArray.map((rect)=>{return rect.getBoundingClientRect()});
+        console.log(rectArray)
+        for(let i=0;i<sliderCount;i++){
+            
+            let slider=document.createElement('input');
+            slider.className = 'slider';
+            slider.setAttribute('type','range');
+            slider.style.webkitAppearance = 'slider-vertical';
+            slider.style.width='10px';
+            
+            slider.setAttribute('orient','vertical');
+            slider.setAttribute('min','0');
+            slider.setAttribute('max','127');
+            slider.setAttribute('value','0');
+            //- slider.style.gridRow = i+1;
+            slider.style.gridColumn = i+1;
+            slider.style.position='absolute';
+            slider.style.top=rectArray[i].top+'px';
+            slider.style.left=rectArray[i].left+'px';
+            slider.style.top=rectArray[i].top+'px';
+            slider.style.right=rectArray[i].right+'px';
+            slider.style.bottom=rectArray[i].bottom+'px';
+            slider.style.height=rectArray[i].height+'px';
+            //- slider.style.width=rectArray[i].width+'px';
+            container.appendChild(slider);
+        }
+    
+        let resizeSliders = function(){
+            
+            document.querySelectorAll('input.slider').forEach((slider,i)=>{
+                
+                let rectArray = Array.from(document.querySelectorAll('#slider-bg rect')).map((rect)=>{return rect.getBoundingClientRect()});
+                slider.style.position='absolute';
+                slider.style.top=rectArray[i].top+'px';
+                slider.style.left=rectArray[i].left+'px';
+                slider.style.top=rectArray[i].top+'px';
+                slider.style.right=rectArray[i].right+'px';
+                slider.style.bottom=rectArray[i].bottom+'px';
+                slider.style.height=rectArray[i].height+'px';
+                
+            })
+        }
+    
+        window.addEventListener('resize',resizeSliders);
+    
+    }
+    
+    window.addEventListener('load',()=>{generateFaders()});
+  </script>
+</head>
+<body onload="init()">
+  <div id="result"></div>
+  <div id="slider-container"> </div>
+  <svg id="slider-bg" viewbox="0 0 1200 600" aria-hidden="true" width="100%" height="100%" style="position:absolute; top:0px; left:0px;">
+    <defs>
+      <linearGradient id="grad-0" x1="0%" y1="90%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:rgb(200,200,200);stop-opacity:0.2"></stop>
+        <stop offset="100%" style="stop-color:rgb(100,100,100);stop-opacity:1"></stop>
+      </linearGradient>
+      <linearGradient id="grad-1" x1="0%" y1="90%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:0.2"></stop>
+        <stop offset="100%" style="stop-color:rgb(100,100,100);stop-opacity:1"></stop>
+      </linearGradient>
+      <style>
+        .svg-fader{
+            cursor:ns-resize;
+            stroke:rgba(200,200,200,0.5);
+            stroke-width:2;
+        }
+        
+        .svg-fader--odd{
+            fill: url(#grad-0);
+        }
+        
+        .svg-fader--even{   
+            fill: url(#grad-1);
+            opacity:0.1;
+        }
+        
+        .svg-fader__track{
+            fill:black;
+            stroke:rgba(0,0,0,0.2);
+            stroke-width:20;
+        }
+        
+        .svg-thumb{
+            fill:rgba(255,255,255,1);
+            stroke:rgba(0,0,0,0.5);
+            stroke-width:3;
+            transition:y 0s ease, fill 1s ease;
+        }
+        
+        .svg-text{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+      </style>
+    </defs>
+    <rect class="svg-fader__track" x="47" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--even" id="fader_0" x="0" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="147" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--odd" id="fader_1" x="100" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="247" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--even" id="fader_2" x="200" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="347" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--odd" id="fader_3" x="300" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="447" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--even" id="fader_4" x="400" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="547" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--odd" id="fader_5" x="500" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="647" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--even" id="fader_6" x="600" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="747" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--odd" id="fader_7" x="700" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="847" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--even" id="fader_8" x="800" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="947" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--odd" id="fader_9" x="900" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="1047" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--even" id="fader_10" x="1000" y="0" width="100" height="600"></rect>
+    <rect class="svg-fader__track" x="1147" y="0" width="4" height="600"></rect>
+    <rect class="svg-fader svg-fader--odd" id="fader_11" x="1100" y="0" width="100" height="600"></rect>
+    <rect class="svg-thumb" id="thumb_0" x="4" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_1" x="104" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_2" x="204" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_3" x="304" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_4" x="404" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_5" x="504" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_6" x="604" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_7" x="704" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_8" x="804" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_9" x="904" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_10" x="1004" y="0" height="50" width="92"></rect>
+    <rect class="svg-thumb" id="thumb_11" x="1104" y="0" height="50" width="92"></rect>
+    <text class="svg-text" id="thumb_0_text" x="14" y="-24">1</text>
+    <text class="svg-text" id="thumb_1_text" x="114" y="-24">2</text>
+    <text class="svg-text" id="thumb_2_text" x="214" y="-24">3</text>
+    <text class="svg-text" id="thumb_3_text" x="314" y="-24">4</text>
+    <text class="svg-text" id="thumb_4_text" x="414" y="-24">5</text>
+    <text class="svg-text" id="thumb_5_text" x="514" y="-24">6</text>
+    <text class="svg-text" id="thumb_6_text" x="614" y="-24">7</text>
+    <text class="svg-text" id="thumb_7_text" x="714" y="-24">8</text>
+    <text class="svg-text" id="thumb_8_text" x="814" y="-24">9</text>
+    <text class="svg-text" id="thumb_9_text" x="914" y="-24">10</text>
+    <text class="svg-text" id="thumb_10_text" x="1014" y="-24">11</text>
+    <text class="svg-text" id="thumb_11_text" x="1114" y="-24">12</text>
+  </svg>
+  <canvas class="touch_pickup_ignore prevent-select" id="cover" aria-hidden="true"></canvas>
+</body>
+<script>
+  // adapted from a remote demo
+  // this version has the socket code removed -- see the sound-ideas-instrument repo for the full version
+  let broadcast = false;
+  window.params2 = new URLSearchParams(window.location.search);
+  if(params2.has('broadcast')){
+      broadcast = true;
+      window.s = new SocketMapper();
+  }
+  const midiMapper = new MidiMapper();
+  const faderHeight = 600;
+  const thumbHeight = 50;
+  const sines = [];
+  const numberOfSines = 12;
+  
+  let register = 'mid';
+  //- register = 'bass'
+  
+  // sines set to bass tones / mid tones depending on register
+  // we could also use the chord player code here ...
+  
+  for(let i=0;i<numberOfSines;i++){
+      let frequency = register == 'bass' ? ((i+4)*4)+50 : Tone.Frequency(i + 60, 'midi').toFrequency();
+      sines.push(new Tone.Oscillator(frequency).toDestination());
+  }
+  
+  sines.forEach((vibe)=>{
+      vibe.volume.value = -Infinity;
+      vibe.start();
+  })
+  
+  
+  function init(){
+      // our current touchboard midi setup exists on channels 0-11 (cc 59-48 respectively)
+      // this should correspond with the default midi script for the touchboard
+      document.querySelectorAll('input').forEach((input,i) => {
+          let index = 59 - i;
+          
+          midiMapper.assign(i, 'cc', index, (value)=>{
+               setFaderElements({
+                  svgElement: document.querySelector(`#thumb_${i}`),
+                  inputElement: document.querySelectorAll('input')[i],
+                  value: value,
+                  y: getY(value, faderHeight, thumbHeight)
+              })
+              processFader(i, value)
+          })
+          midiMapper.listen();
+      })
+  }
+  
+  function setFaderElements(data = {}, animationTime = 0.1){
+      let { svgElement, inputElement, value, y } = data;
+      let delta = Math.abs(value - parseFloat(inputElement.getAttribute('value')));
+      svgElement.style.transition = `y ${delta > 10 ? animationTime : 0}s ease-in-out, fill 1s ease`;
+      svgElement.setAttribute('y',y);
+      inputElement.setAttribute('value',value);
+  }
+  
+  /**
+   * Get the index of the fader from the id
+   * @param {string} id
+   * @returns {number}
+   */
+  
+  function getIndex(id){
+      return id.split('_')[1];
+  }
+  
+  /**
+      * Get the id of the thumb from the fader id
+      * @param {string} element
+      * @returns {string}
+  */
+  
+  function getThumbId(element){
+      return element.id.replace('fader','thumb');
+  }
+  
+  /**
+      * Get the y position of the thumb from the value
+      * @param {number} value
+      * @param {number} faderHeight
+      * @param {number} thumbHeight
+      * @returns {number}
+  */
+  
+  function getY(value, faderHeight, thumbHeight){
+      return faderHeight - (value / 127 * faderHeight) - (thumbHeight / 2);
+  }
+  
+  /**
+      * Process the fader value
+      * @param {number} cc
+      * @param {number} value
+  */
+  
+  function processFader(cc, value){
+          Tone.start();
+          // arbitrary volume scaling for quick demo
+          sines[cc].volume.rampTo(Tone.gainToDb(value/1024), 0.1);
+  
+          if(params.has('broadcast')) s.out.cc(1, cc, value);
+  
+  
+  }
+  
+  /**
+      * Calculate the fader value from the element
+      * @param {object} element
+      * @param {object} e
+      * @param {object} obj
+      * @returns {number}
+  */
+  
+  const calculateFaderValue = (element, e, obj) => {
+      const value = Math.round(obj.relative.y / element.getBoundingClientRect().height * 127);
+      return value < 4 ? 0 : value > 124 ? 127 : value;
+  }
+  
+  /**
+      * Update the fader
+      * @param {object} element
+      * @param {object} e
+      * @param {object} obj
+      * @param {number} animationTime
+  */
+  
+  const updateFader = (element, e, obj, animationTime = 0.1) => {
+      // todo: replace querySelectorAll with a map of elements
+      let value = calculateFaderValue(element, e, obj);
+      let index = getIndex(element.id);
+      let faderElement = document.querySelectorAll('input')[getIndex(element.id)];
+      let thumbId = getThumbId(element);
+  
+      setFaderElements({
+          svgElement: document.querySelector(`#${thumbId}`),
+          inputElement: document.querySelectorAll('input')[index],
+          value: value,
+          y: getY(value, faderHeight, thumbHeight),
+          animationTime: animationTime
+      })
+  
+      processFader(index, value);
+  }
+  
+  // unassigned: end, leave...
+  multitouchMapper
+      .setDefaultAction(()=>{console.log('default')})
+      .addStyles()
+      .setAction('.svg-fader',{
+          start: updateFader,
+          enter: updateFader, 
+          move: updateFader
+      })
+  
+  document.querySelectorAll('input').forEach((input,i)=>{
+      // todo: add an "onfocus" listener for visual confirmation of keyboard access?
+      // this could also occur on mouseover / touchstart
+      let y = getY(input.value, faderHeight, thumbHeight);
+      document.querySelector(`#thumb_${i}`).setAttribute('y',y);
+      //- document.querySelectorAll(`#thumb_${i}_text`)[0].setAttribute('y',y+22);
+  
+      input.setAttribute('aria-label', `fader ${i+1}`)
+  
+      input.addEventListener('input',(e)=>{
+          let y = getY(e.target.value, faderHeight, thumbHeight);
+          document.querySelector(`#thumb_${i}`).setAttribute('y',y);
+          //- document.querySelectorAll(`#thumb_${i}_text`)[0].setAttribute('y',y+22);
+      })
+  
+      input.addEventListener('input', (e) => {
+          processFader(getIndex(e.target.id), e.target.value);  
+      })
+  
+  })
+</script>
+<menu class="allowDefault" id="toolbar" role="toolbar">
+  <li class="toolbar__item" style="display:none;">
+    <label for="select_instrument">Page </label>
+    <select id="select_instrument">
+      <option id="index">index</option>
+      <option id="svg">svg </option>
+      <option id="copper">copper </option>
+    </select>
+  </li>
+  <li class="toolbar__item" id="toolbar__start">
+    <button onclick="Tone.start()">Restart audio</button>
+  </li>
+  <li class="toolbar__item" id="toolbar__root">
+    <label for="select_root">Root </label>
+    <select id="select_root"></select>
+  </li>
+  <li class="toolbar__item" id="toolbar__scale">
+    <label for="select_scale">Scale </label>
+    <select id="select_scale"></select>
+  </li>
+  <li class="toolbar__item" id="toolbar__octave">
+    <label for="select_octave">Octave </label>
+    <select id="select_octave"></select>
+  </li>
+  <li class="toolbar__item" id="toolbar__preset">
+    <label for="select_preset">Preset </label>
+    <select id="select_preset"></select>
+  </li>
+</menu>
+<script>
+  let url = window.location.href.split('/');
+  
+  url = url[url.length-1].split('.')[0];
+  if(url=='') url='index';
+  
+  document.querySelector('#select_instrument').value = url;
+  document.body.addEventListener('load',function(){
+      document.querySelector('#toolbar').setAttribute('transform', 'translate(0px, 0px)')
+  }, false);
+  
+  document.querySelector('#toolbar').style.transform = 'translateY(0px)';
+</script>
+<script>
+  //- document.querySelector('#select_instrument').addEventListener('input',function(){
+  //-     window.location.href = `${this.value}.html`
+  //- })
+  
+  //- let synthPresets = {
+  //-     plink:{
+  //-         filter:{
+  //-             type:'highpass',
+  //-             frequency:100
+  //-         },
+  //-         synth:{
+  //-             oscillator:{
+  //-                 type:'sine4',
+  //-                 volume:-3
+  //-             },
+  //-             envelope:{
+  //-                 attack:0.01,
+  //-                 decay:0.2,
+  //-                 release:0.1
+  //-             }
+  //-         }
+  //-     },
+  //-     soft:{
+  //-         filter:{
+  //-             type:'lowpass',
+  //-             frequency:10000
+  //-         },
+  //-         synth:{
+  //-             oscillator:{
+  //-                 type:'sine2', 
+  //-                 volume:-6,
+  //-                 detune:Math.random()-0.5
+  //-             },
+  //-             envelope:{
+  //-                 attack:1,
+  //-                 release:4
+  //-             }
+  //-         }
+          
+  //-     },
+  //-     plunk:{
+  //-         filter:{
+  //-             type:'lowpass',
+  //-             frequency:2000
+  //-         },
+  //-         synth:{
+  //-             oscillator:{
+  //-                 type:'sawtooth3',
+  //-                 volume:-24
+  //-             },
+  //-             envelope:{
+  //-                 attack:0.01,
+  //-                 decay:0.4,
+  //-                 release:2
+  //-             }
+  //-         }
+  //-     },
+  //- }
+  
+  //- Object.keys(synthPresets).forEach(x=>{
+  //-     document.querySelector('#select_preset').appendChild(cm.create('option',{
+  //-         innerHTML:x 
+  //-     }))  
+  //- })
+  
+  //- document.querySelector('#select_preset').addEventListener('input',function(){
+  //-     instrument.setParameters(synthPresets[this.value]);
+      
+  //- })
+</script>
+<script>
+  const scaleHandler = {
+      current:{
+          root:'C',
+          scale:'major',
+          octave:4,
+          range:2
+      },
+      inputs:{
+          root:document.querySelector('#select_root'),
+          scale:document.querySelector('#select_scale'),
+          octave:document.querySelector('#select_octave')
+      },
+      defaults:{
+          notes:['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'],
+          //- scales:['major','minor','blues'],
+          scales:Scale.names(),
+          octaves:[2, 3, 4, 5, 6, 7]
+      },
+      notes:[],
+      cssSelector:'.screenNote',
+      callback:function(){
+          instrument.setNotes(this.notes);
+      },
+      populate_select_octave(start=1, input_octave = this.inputs.octave){
+         input_octave.innerHTML=''
+          this.defaults.octaves.forEach(octaveValue=>{
+              let element = document.createElement('option')
+              element.innerHTML = octaveValue;
+              input_octave.appendChild(element);
+          })
+          input_octave.value = this.current.octave;
+          return this;
+      },
+      populate_select_root(start='C', input_root = this.inputs.root){
+          input_root.innerHTML=''
+          this.defaults.notes.forEach(noteValue=>{
+              let element = document.createElement('option')
+              element.innerHTML = noteValue;
+              input_root.appendChild(element);
+          })
+          input_root.value = this.current.root;
+          return this;
+      },
+      populate_select_scale(root=this.current.root, input_scale = this.inputs.scale){
+          input_scale.innerHTML='';
+          
+          this.defaults.scales.forEach(scaleValue=>{
+              let element = document.createElement('option')
+              element.innerHTML = scaleValue;
+              input_scale.appendChild(element);
+          })
+          input_scale.value = this.current.scale;
+          return this;
+      },
+      setScale(options={}){
+          Object.assign(this.current,options);
+          this.update();
+      return this;
+      },
+      setOctave(options={}){
+          Object.assign(this.current,options);
+          this.update();
+          return this;
+      },
+      update(){
+          let {root, scale, octave, range} = this.current;
+          this.notes =[]
+          for(let i=0;i<range;i++){
+              this.notes = this.notes.concat(Scale.get(`${root}${parseInt(octave)+i} ${scale}`).notes);
+          }
+          
+          this.callback();
+      },
+      addListeners(){
+          this.inputs.root.addEventListener('input',function(){
+                  scaleHandler.root = this.value;
+                  scaleHandler.populate_select_scale();
+                  scaleHandler.setScale({root:this.value})
+          }),
+          this.inputs.scale.addEventListener('input',function(){
+              scaleHandler.setScale({scale:this.value})
+          })
+          this.inputs.octave.addEventListener('input',function(){
+              scaleHandler.setOctave({octave:this.value})
+          })
+      },
+      init(){
+          this.populate_select_root();
+          this.populate_select_scale();
+          this.populate_select_octave();
+          this.addListeners();
+      }
+  }
+  
+  scaleHandler.init();
+</script>
+<script>
+  let params = new URLSearchParams(window.location.search);
+  if(params.has('board')){
+      switch(params.get('board')){
+          case 'tb':
+              console.log('touch board');
+          break;
+          case 'btb8':
+              console.log('btb board');
+              // lazy demo
+              for(let i = 8; i<12;i++){
+                  document.querySelectorAll('.svg-thumb')[i].style.display='none';
+                  document.querySelectorAll('.svg-text')[i].style.display='none';
+                  document.querySelectorAll('.svg-fader__track')[i].style.display='none';
+                  document.querySelectorAll('.svg-fader')[i].style.display='none';
+                  midiMapper.assign(15, 'cc', i-8, (value)=>{
+                      Tone.start();
+                      setFaderElements({
+                          svgElement: document.querySelector(`#thumb_${i-8}`),
+                          inputElement: document.querySelectorAll('input')[i-8],
+                          value: value,
+                          y: getY(value, faderHeight, thumbHeight)
+                      })
+                      processFader(i, value)
+                  })
+              }
+          break; 
+          case 'btb6':
+              console.log('btb board');
+              // lazy demo
+              for(let i = 6; i<12;i++){
+                  document.querySelectorAll('.svg-thumb')[i].style.display='none';
+                  document.querySelectorAll('.svg-text')[i].style.display='none';
+                  document.querySelectorAll('.svg-fader__track')[i].style.display='none';
+                  document.querySelectorAll('.svg-fader')[i].style.display='none';
+                  
+                  midiMapper.assign(15, 'cc', i-6, (value)=>{
+                      Tone.start();
+                      setFaderElements({
+                          svgElement: document.querySelector(`#thumb_${i-6}`),
+                          inputElement: document.querySelectorAll('input')[i-6],
+                          value: value,
+                          y: getY(value, faderHeight, thumbHeight)
+                      })
+                      processFader(i, value)
+                  })
+              }
+              
+          break; 
+      }
+  }
+  
+  // incorporating Joel Dazé's colour system for testing; please see https://github.com/blurringtheboundaries/colours
+  const JD_COLOURS = 
+      [
+          '#ff9933',
+          '#ffcc99',
+          '#f85af8',
+          '#c3fcc8',
+          '#0cffff',
+          '#ffff03',
+          '#e0b5a2',
+          '#ff0101',
+          '#c37596',
+          '#cc66ff',
+          '#33cc33',
+          '#0783dc'
+      ];
+  
+  // emulating ScreenInstrument class for demo purposes
+  let instrument = {
+      setNotes(notes){
+          
+          notes.forEach((noteName,i)=>{
+              if(document.querySelectorAll('.svg-thumb')[i]) document.querySelectorAll('.svg-thumb')[i].style.fill = JD_COLOURS[Tone.Frequency(noteName).toMidi()%12];
+              if(document.querySelectorAll('input')[i]) document.querySelectorAll('input')[i].setAttribute('aria-label', `fader ${i+1} ${noteName.replace('#', ' sharp ')}`)
+              if(sines[i]){
+                  sines[i].frequency.rampTo(noteName, 1);
+              }
+          })
+      }
+  }
+  
+  // hide the sound preset menu
+  document.querySelectorAll('#toolbar__preset').forEach(x=>x.remove())
+</script>
