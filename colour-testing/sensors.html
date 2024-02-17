@@ -573,8 +573,8 @@
                   midiMapper.assign(0, 'cc', i, (value)=>{
                       Tone.start();
                       setFaderElements({
-                          svgElement: document.querySelector(`#thumb_${i-8}`),
-                          inputElement: document.querySelectorAll('input')[i-8],
+                          svgElement: document.querySelector(`#thumb_${i}`),
+                          inputElement: document.querySelectorAll('input')[i],
                           value: value,
                           y: getY(value, faderHeight, thumbHeight)
                       })
