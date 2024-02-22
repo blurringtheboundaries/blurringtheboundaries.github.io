@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>socket-mapper receiver</title>
+    <style>
+      body{
+        background-color: #000;
+        color: #fff;
+        transition: all 0.1s;
+      }
+      </style>
+    <!-- <script src="./socket-mapper.js" type="module"></script> -->
+    <script src="./main.js" type="module"></script>
+    <script>
+      
+        function convertAlphaValueinRGBAToRGB(r, g, b, a){
+          let alpha = a / 255;
+          let newR = (1 - alpha) * 255 + alpha * r;
+          let newG = (1 - alpha) * 255 + alpha * g;
+          let newB = (1 - alpha) * 255 + alpha * b;
+          return [newR, newG, newB];
+        }
+      
+        function hexToStringRGB(hexString){
+          let r = parseInt(hexString.substr(1, 2), 16);
+          let g = parseInt(hexString.substr(3, 2), 16);
+          let b = parseInt(hexString.substr(5, 2), 16);
+          return [r, g, b];
+          // return `rgb(${r}, ${g}, ${b})`;
+        }
+        
+        function stringRGBToHex(rgbString) {
+            let separator = rgbString.indexOf(",") > -1 ? "," : " ";
+            let rgb = rgbString.substr(4).split(")")[0].split(separator)
+                              .map(value => {
+                                  if (value.includes('%')) {
+                                      value = Math.round(parseFloat(value) * 2.55);
+                                  }
+                                  return (+value).toString(16).padStart(2, '0');
+                              });
+          
+            return `#${rgb.join('')}`;
+        }
+        
+        function init(){
+          let colours = ['#ff9933', '#ffcc99', '#f85af8', '#c3fcc8', '#0cffff', '#ffff03', '#e0b5a2', '#ff0101', '#c37596', '#cc66ff', '#33cc33', '#0783dc'];
+          
+          window.socketMapper = new SocketMapper();
+          socketMapper.socket.on('midi', (msg) => {
+            console.log(msg)
+            let [channel, index, value, note] = msg.message;
+            if(msg.type=='cc' && value > 0){
+                // document.body.style.backgroundColor = msg.id.colour;
+                let noteClass = note % 12;
+                // document.body.style.backgroundColor = colours[noteClass];
+                let [r, g, b] = hexToStringRGB(colours[noteClass]);
+                let modifiedColour = convertAlphaValueinRGBAToRGB(r,g,b, value / 127).map(Math.round);
+                let modifiedColourString = `rgb(${modifiedColour[0]}, ${modifiedColour[1]}, ${modifiedColour[2]})`;
+                let hexString = stringRGBToHex(modifiedColourString);
+                console.log(hexString);
+                // console.log(hexToStringRGB(colours[noteClass]));
+                document.body.style.backgroundColor = modifiedColourString;
+            }
+            if(msg.type=='cc'){
+                document.querySelector('#range').value = msg.message[2];
+            }
+          });
+        }
+    
+    </script>
+</head>
+<body onload="init();">
+    
+    <input type="range" id="range" min="0" max="127" value="50"></input>
+   
+</body>
+
+</html>
