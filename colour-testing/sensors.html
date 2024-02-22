@@ -165,7 +165,22 @@
   if(params2.has('broadcast')){
       broadcast = true;
       window.s = new SocketMapper();
+      function emitCC(channel, cc, value, note=0){
+        channel -= (channel >=144 ? 144 : 0);
+        let m = [channel, cc, value,note];
+        let output = {
+            message:m,
+            type:'cc',
+            ramp:0,
+            path: this.path
+        };
+        console.log('socketmapper',output)
+        this.socket.emit('midi', output);
+    }
+      s.out.cc = emitCC.bind(s);
   }
+  
+  
   const midiMapper = new MidiMapper();
   const faderHeight = 600;
   const thumbHeight = 50;
@@ -258,8 +273,9 @@
           Tone.start();
           // arbitrary volume scaling for quick demo
           sines[cc].volume.rampTo(Tone.gainToDb(value/1024), 0.1);
-  
-          if(params.has('broadcast')) s.out.cc(1, cc, value);
+          let note = Tone.Frequency(sines[cc].frequency.value).toMidi();
+        //   console.log(Tone.Frequency(sines[cc].frequency.value).toMidi());
+          if(params.has('broadcast')) s.out.cc(1, cc, value, note);
   
   
   }
@@ -552,18 +568,21 @@
               console.log('touch board');
           break;
           case 'btb8':
+            
+          //todo: check for the correct midi channel -- this didn't seem to work in a recent session
               console.log('btb board');
               // lazy demo
               for(let i = 0; i<8;i++){
-                  document.querySelectorAll('.svg-thumb')[i].style.display='none';
-                  document.querySelectorAll('.svg-text')[i].style.display='none';
-                  document.querySelectorAll('.svg-fader__track')[i].style.display='none';
-                  document.querySelectorAll('.svg-fader')[i].style.display='none';
-                  midiMapper.assign(15, 'cc', i-8, (value)=>{
+                // todo: fix this -- the script actually removes the faders!
+                //   document.querySelectorAll('.svg-thumb')[i].style.display='none';
+                //   document.querySelectorAll('.svg-text')[i].style.display='none';
+                //   document.querySelectorAll('.svg-fader__track')[i].style.display='none';
+                //   document.querySelectorAll('.svg-fader')[i].style.display='none';
+                  midiMapper.assign(15, 'cc', i, (value)=>{
                       Tone.start();
                       setFaderElements({
-                          svgElement: document.querySelector(`#thumb_${i-8}`),
-                          inputElement: document.querySelectorAll('input')[i-8],
+                          svgElement: document.querySelector(`#thumb_${i}`),
+                          inputElement: document.querySelectorAll('input')[i],
                           value: value,
                           y: getY(value, faderHeight, thumbHeight)
                       })
@@ -581,6 +600,12 @@
                       processFader(i, value)
                   })
               }
+              for(let i = 8; i<12;i++){
+                  document.querySelectorAll('.svg-thumb')[i].style.display='none';
+                  document.querySelectorAll('.svg-text')[i].style.display='none';
+                  document.querySelectorAll('.svg-fader__track')[i].style.display='none';
+                  document.querySelectorAll('.svg-fader')[i].style.display='none';
+                }
           break; 
           case 'btb6':
               console.log('btb board');
@@ -649,5 +674,8 @@
   }
   
   // hide the sound preset menu
-  document.querySelectorAll('#toolbar__preset').forEach(x=>x.remove())
+  document.querySelectorAll('#toolbar__preset').forEach(x=>x.remove());
+  window.addEventListener('keydown',function(e){
+          Tone.start();
+  })
 </script>
