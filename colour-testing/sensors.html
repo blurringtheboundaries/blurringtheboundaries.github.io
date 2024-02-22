@@ -174,7 +174,7 @@
             ramp:0,
             path: this.path
         };
-        console.log('socketmapper',output)
+        // console.log('socketmapper',output)
         this.socket.emit('midi', output);
     }
       s.out.cc = emitCC.bind(s);
@@ -272,7 +272,7 @@
   function processFader(cc, value){
           Tone.start();
           // arbitrary volume scaling for quick demo
-          sines[cc].volume.rampTo(Tone.gainToDb(value/1024), 0.1);
+          sines[cc].volume.rampTo(Tone.gainToDb(value/1024), 0.01);
           let note = Tone.Frequency(sines[cc].frequency.value).toMidi();
         //   console.log(Tone.Frequency(sines[cc].frequency.value).toMidi());
           if(params.has('broadcast')) s.out.cc(1, cc, value, note);
