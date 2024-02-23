@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <title>socket-mapper receiver</title>
     <style>
       body{
@@ -44,6 +45,23 @@
             return `#${rgb.join('')}`;
         }
         
+        const synthBank = {
+          '0': new Tone.Oscillator({volume:-Infinity, type:'sawtooth'}).toDestination(),
+          '1': new Tone.Oscillator({volume:-Infinity, type:'sawtooth'}).toDestination(),
+          '2': new Tone.Oscillator({volume:-Infinity, type:'sawtooth'}).toDestination(),
+          '3': new Tone.Oscillator({volume:-Infinity, type:'sawtooth'}).toDestination(),
+          '4': new Tone.Oscillator({volume:-Infinity, type:'sawtooth'}).toDestination(),
+          '5': new Tone.Oscillator({volume:-Infinity, type:'sawtooth'}).toDestination(),
+          '6': new Tone.Oscillator({volume:-Infinity, type:'sawtooth'}).toDestination(),
+          '7': new Tone.Oscillator({volume:-Infinity, type:'sawtooth'}).toDestination(),
+          
+        }
+        
+        Object.entries(synthBank).forEach(([key, synth]) => {
+          synth.volume.value = -Infinity;
+          synth.start();
+        });
+        
         function init(){
           let colours = ['#ff9933', '#ffcc99', '#f85af8', '#c3fcc8', '#0cffff', '#ffff03', '#e0b5a2', '#ff0101', '#c37596', '#cc66ff', '#33cc33', '#0783dc'];
           
@@ -51,29 +69,65 @@
           socketMapper.socket.on('midi', (msg) => {
             console.log(msg)
             let [channel, index, value, note] = msg.message;
-            if(msg.type=='cc' && value > 0){
+            if(msg.type=='cc'){
                 // document.body.style.backgroundColor = msg.id.colour;
-                let noteClass = note % 12;
+                
                 // document.body.style.backgroundColor = colours[noteClass];
+               
+                // console.log(hexString);
+                // console.log(hexToStringRGB(colours[noteClass]));
+                // document.body.style.backgroundColor = modifiedColourString;
+            }
+            if(msg.type=='cc'){
+              // console.log(channel, index, value)
+                document.querySelectorAll('.rangeslider')[index].value = value;
+                // synthBank[index].volume.rampTo(Tone.gainToDb(value/127 ), 0.01);
+                let noteClass = note % 12;
+                let element = document.querySelector(`#colour${index + 1}`);
+                if(index == 2) return;
+                // if(index == 5) return;
+                // if(index == 7) return;
+                element.style.opacity = value / 127;
+                element.style.backgroundColor = colours[noteClass];
                 let [r, g, b] = hexToStringRGB(colours[noteClass]);
                 let modifiedColour = convertAlphaValueinRGBAToRGB(r,g,b, value / 127).map(Math.round);
                 let modifiedColourString = `rgb(${modifiedColour[0]}, ${modifiedColour[1]}, ${modifiedColour[2]})`;
                 let hexString = stringRGBToHex(modifiedColourString);
-                console.log(hexString);
-                // console.log(hexToStringRGB(colours[noteClass]));
-                document.body.style.backgroundColor = modifiedColourString;
-            }
-            if(msg.type=='cc'){
-                document.querySelector('#range').value = msg.message[2];
+                let exponentialValue = Math.pow(value / 127, 2);
+                console.log(index)
+                synthBank[index].volume.rampTo(Tone.gainToDb(exponentialValue/4), 0.01);
+                synthBank[index].frequency.rampTo(Tone.Frequency(note, "midi").toFrequency());
+                element.style.border = `${value/2}px solid ${colours[note % 12]}`;
+                
             }
           });
         }
     
+        window.addEventListener('keydown', (e) => {
+         Tone.start();
+        })
+        
     </script>
 </head>
 <body onload="init();">
     
-    <input type="range" id="range" min="0" max="127" value="50"></input>
+    <input class="rangeslider" type="range" id="range" min="0" max="127" value="0"></input>
+    <input class="rangeslider" type="range" id="range2" min="0" max="127" value="0"></input>
+    <input class="rangeslider" type="range" id="range3" min="0" max="127" value="0"></input>
+    <input class="rangeslider" type="range" id="range4" min="0" max="127" value="0"></input>
+    <input class="rangeslider" type="range" id="range5" min="0" max="127" value="0"></input>
+    <input class="rangeslider" type="range" id="range6" min="0" max="127" value="0"></input>
+    <input class="rangeslider" type="range" id="range7" min="0" max="127" value="0"></input>
+    <input class="rangeslider" type="range" id="range8" min="0" max="127" value="0"></input>
+    <div class="colour" id="colour1" style="width: 100px; height: 100px;">1</div>
+    <div class="colour" id="colour2" style="width: 100px; height: 100px;">2</div>
+    <div class="colour" id="colour3" style="width: 100px; height: 100px;">3</div>
+    <div class="colour" id="colour4" style="width: 100px; height: 100px;">4</div>
+    <div class="colour" id="colour5" style="width: 100px; height: 100px;">5</div>
+    <div class="colour" id="colour6" style="width: 100px; height: 100px;">6</div>
+    <div class="colour" id="colour7" style="width: 100px; height: 100px;">7</div>
+    <div class="colour" id="colour8" style="width: 100px; height: 100px;">8</div>
+    
    
 </body>
 

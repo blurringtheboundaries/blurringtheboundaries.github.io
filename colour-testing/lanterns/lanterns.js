@@ -147,3 +147,52 @@ document.querySelectorAll('.wedge').forEach(x=>{
     })
 })
 
+function init(){
+    let colours = ['#ff9933', '#ffcc99', '#f85af8', '#c3fcc8', '#0cffff', '#ffff03', '#e0b5a2', '#ff0101', '#c37596', '#cc66ff', '#33cc33', '#0783dc'];
+    window.addEventListener('keydown', (e) => {
+        Tone.start();
+       })
+    window.socketMapper = new SocketMapper();
+    socketMapper.socket.on('midi', (msg) => {
+      console.log(msg)
+      let [channel, index, value, note] = msg.message;
+      if(msg.type=='cc'){
+          // document.body.style.backgroundColor = msg.id.colour;
+          
+          // document.body.style.backgroundColor = colours[noteClass];
+         
+          // console.log(hexString);
+          // console.log(hexToStringRGB(colours[noteClass]));
+          // document.body.style.backgroundColor = modifiedColourString;
+      }
+      if(msg.type=='cc'){
+        console.log(channel, index, value)
+          document.querySelectorAll('.rangeslider')[index].value = value;
+          // synthBank[index].volume.rampTo(Tone.gainToDb(value/127 ), 0.01);
+          let noteClass = note % 12;
+          let element = document.querySelector(`#colour${index + 1}`);
+        //   if(index == 2) return;
+          let indices = [10, 22, 34, 46, 58, 70, 82, 94];
+            serial.write(indices[index] + hexString + "\n");
+            console.log(indices[index] + hexString + "\n");
+          // if(index == 5) return;
+          // if(index == 7) return;
+          element.style.opacity = value / 127;
+          element.style.backgroundColor = colours[noteClass];
+          let [r, g, b] = hexToStringRGB(colours[noteClass]);
+          let modifiedColour = convertAlphaValueinRGBAToRGB(r,g,b, value / 127).map(Math.round);
+          let modifiedColourString = `rgb(${modifiedColour[0]}, ${modifiedColour[1]}, ${modifiedColour[2]})`;
+          let hexString = stringRGBToHex(modifiedColourString);
+          let exponentialValue = Math.pow(value / 127, 2);
+          console.log(index)
+          synthBank[index].volume.rampTo(Tone.gainToDb(exponentialValue/4), 0.01);
+          synthBank[index].frequency.rampTo(Tone.Frequency(note, "midi").toFrequency());
+          element.style.border = `${value/2}px solid ${colours[note % 12]}`;
+          
+      }
+    });
+  }
+
+
+
+init();
