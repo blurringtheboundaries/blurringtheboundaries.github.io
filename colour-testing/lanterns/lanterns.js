@@ -156,15 +156,7 @@ function init(){
     socketMapper.socket.on('midi', (msg) => {
       console.log(msg)
       let [channel, index, value, note] = msg.message;
-      if(msg.type=='cc'){
-          // document.body.style.backgroundColor = msg.id.colour;
-          
-          // document.body.style.backgroundColor = colours[noteClass];
-         
-          // console.log(hexString);
-          // console.log(hexToStringRGB(colours[noteClass]));
-          // document.body.style.backgroundColor = modifiedColourString;
-      }
+      
       if(msg.type=='cc'){
         console.log(channel, index, value)
           document.querySelectorAll('.rangeslider')[index].value = value;
@@ -172,11 +164,9 @@ function init(){
           let noteClass = note % 12;
           let element = document.querySelector(`#colour${index + 1}`);
         //   if(index == 2) return;
-          let indices = [10, 22, 34, 46, 58, 70, 82, 94];
-            serial.write(indices[index] + hexString + "\n");
-            console.log(indices[index] + hexString + "\n");
-          // if(index == 5) return;
-          // if(index == 7) return;
+        let indices = [10, 22, 34, 46, 58, 70, 82, 94];
+        serial.write(indices[index] + hexString + "\n");
+        console.log(indices[index] + hexString + "\n");
           element.style.opacity = value / 127;
           element.style.backgroundColor = colours[noteClass];
           let [r, g, b] = hexToStringRGB(colours[noteClass]);
