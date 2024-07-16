@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colour Testing</title>
     <link rel="stylesheet" href="style.css">
-    <!-- <script src="script.js" defer></script> -->
+    <script src="script.js"></script>
     
     <body>
         <h1>Colour Demo</h1>
-        <img src="setup_vector.svg" class="demo__image">
-        <img src="setup_alpha.png" class="demo__image">
-        <div id="colour"></div>
+        <div id="colour">
+            <!-- <img src="setup_vector.svg" class="demo__image"> -->
+            <object data="setup_vector.svg" type="image/svg+xml" class="demo__image svg-import"></object>
+            <img src="setup_alpha.png" class="demo__image">
+            
+        </div>
     </body>
