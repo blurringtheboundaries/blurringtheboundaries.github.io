@@ -87,5 +87,8 @@ const replaceSvgAll = function (selector='object.svg-import', container = docume
 document.addEventListener('DOMContentLoaded', function() {
     const svgObjects = document.querySelectorAll('object.svg-import');
     svgObjects.forEach(replaceSvgObject);
-    console.log('test')
+    document.querySelector('img').addEventListener('click', function(){
+        document.querySelectorAll('.hue').forEach(x=>x.style.filter=`saturate(100%) hue-rotate(${Math.round(Math.random()*360)}deg)`)
+        document.querySelector('img').style.opacity=Math.random();
+    })
 });
