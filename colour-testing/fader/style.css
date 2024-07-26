@@ -53,6 +53,7 @@ body {
   border-radius: 0 0 5px 5px;
   border: 1px solid #333333;
 }
+
 #toolbar--floating, .toolbar--floating {
   position: fixed;
   padding: 0.5em;
@@ -66,6 +67,7 @@ body {
   border: 1px solid #333333;
   font-family: Roboto, Arial, Helvetica, sans-serif;
 }
+
 #toolbar__item, .toolbar__item {
   border: 1px solid gray;
   border-radius: 5px;
@@ -74,9 +76,11 @@ body {
   list-style-type: none;
   color: lightgray;
 }
+
 #toolbar__item label, .toolbar__item label {
   padding-right: 0.5em;
 }
+
 #toolbar__item button, #toolbar__item select, .toolbar__item button, .toolbar__item select {
   border-radius: 5px;
   box-shadow: none;
@@ -84,9 +88,11 @@ body {
   font-size: 1em;
   margin: 0;
 }
+
 #toolbar__item select, .toolbar__item select {
   padding: 0.1em;
 }
+
 #toolbar__item:hover, .toolbar__item:hover {
   background-color: #333333;
 }
@@ -141,6 +147,7 @@ body {
 .screenNote {
   transition: fill 1s ease;
 }
+
 .screenNote.playing {
   transition: fill 0.1s;
   fill: turqoise;
@@ -170,10 +177,12 @@ body {
   opacity: 0.7;
   transition: all 0.2s ease-in-out;
 }
+
 .instrument__fullscreen:hover {
   cursor: pointer;
   opacity: 1;
 }
+
 .instrument__fullscreen.embed {
   display: block;
 }

@@ -1,6 +1,3 @@
-
-// import {emit} from './general/emit.js';
-
 /**
  * Replace an object element with its svg content, inline.
  * If the object has not loaded yet, try again every 100ms.
@@ -63,7 +60,7 @@ const replaceSvgObject = function(objectElement) {
     if(newSvgElement.classList.contains('.loadhidden')){
         newSvgElement.style.display = 'none';
     }
-    // emit('svg-replaced', newSvgElement);
+
 }
 
 /**
@@ -73,16 +70,12 @@ const replaceSvgObject = function(objectElement) {
 
 const replaceSvgAll = function (selector='object.svg-import', container = document){
     container.querySelectorAll(selector).forEach(element => {
-        // console.log('replaceSvgAll', selector, element);
         if(window.verbose)console.log('replaceSvgAll', selector, element);
         replaceSvgObject(element) || element.addEventListener('load',()=>{
             replaceSvgObject(element);
         });
     });
 }
-
-
-
 
 document.addEventListener('DOMContentLoaded', function() {
     const svgObjects = document.querySelectorAll('object.svg-import');
